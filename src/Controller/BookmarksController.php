@@ -120,4 +120,21 @@ class BookmarksController extends AppController
         $this->set(['bookmarks' => $bookmarks, 'tags' => $tags]);
     }
 
+    public function isAuthorized($user)
+    {
+        $action = $this->request->params['action'];
+        if (in_array($action, ['index', 'add', 'tags'])) {
+            return true;
+        }
+        if (empty($this->request->params['pass'][0])) {
+            return false;
+        }
+
+        $id = $this->request->params['pass'][0];
+        $bookmark = $this->Bookmarks->get($id);
+        if ($bookmark->user_id == $user['id']) {
+            return true;
+        }
+        return parent::isAuthorized($user);
+    }
 }
