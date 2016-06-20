@@ -90,7 +90,8 @@ class BookmarksTable extends Table
                 if (empty($options['tags'])) {
                     return $q->where(['Tags.title IS' => null]);
                 }
-                return $q->where(['Tags.title IN' => $options['tags']]);
-            });
+                return $q->where(['Tags.title IN' => $options['tags']])
+                            ->where(['Bookmarks.user_id IN' => $options['user_id']]);
+           });
     }
 }
