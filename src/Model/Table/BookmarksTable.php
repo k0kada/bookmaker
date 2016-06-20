@@ -79,4 +79,18 @@ class BookmarksTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
         return $rules;
     }
+
+
+    public function findTagged(Query $query, array $options)
+    {
+        return $this->find()
+            ->distinct(['Bookmarks.id'])
+            //クロージャー
+            ->matching('Tags', function ($q) use ($options) {
+                if (empty($options['tags'])) {
+                    return $q->where(['Tags.title IS' => null]);
+                }
+                return $q->where(['Tags.title IN' => $options['tags']]);
+            });
+    }
 }
